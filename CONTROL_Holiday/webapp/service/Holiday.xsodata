@@ -1,0 +1,13 @@
+// To define an XS OData service, you can use the following syntax.
+// In the example below Aggregation, Modification and Association are defined.
+
+service  { 
+
+// FF: replacing XSJS file jsondata.xsjs (JSON Model) by OData Model 
+//var str = JSON.stringify({
+//		Holidays : myDataList
+//	});
+
+ "ZCONTROL_TABLES"."ZRT_HOLIDAY" as "Holidays";
+
+}  

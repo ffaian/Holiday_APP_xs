@@ -1,0 +1,17 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<SelectDialog
+		id = "mySiteDialog"
+		title="Sites"
+		class="sapUiPopupWithPadding"
+		items="{/Sites}"
+		search="OnHandleValueHelpSearch"
+		liveChange="OnHandleLiveValueHelpSearch"
+		confirm="OnHandleValueHelpClose"
+		cancel="OnHandleValueHelpClose">
+		<StandardListItem
+			title="{PLANT}"
+			description="{TXTMD}" />
+	</SelectDialog>
+</core:FragmentDefinition>

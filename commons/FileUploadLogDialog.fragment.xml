@@ -1,0 +1,35 @@
+<core:FragmentDefinition xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<Dialog id="myPOS_DeptDialog">
+		<customHeader>
+			<Bar>
+				<contentMiddle>
+					<Title text="File error details" titleStyle="H2"></Title>
+				</contentMiddle>
+			</Bar>
+		</customHeader>
+		<Table id="Uploadtable" items="{/}">
+			<items>
+				<ColumnListItem>
+					<cells>
+						<Text text="{errormsg}"></Text>
+						<Text text="{errorline}"></Text>
+						<Text text="{errorlog}"></Text>
+					</cells>
+				</ColumnListItem>
+			</items>
+			<columns>
+				<Column>
+					<Text text="Error #"></Text>
+				</Column>
+				<Column>
+					<Text text="Record #"></Text>
+				</Column>
+				<Column>
+					<Text text="Error"></Text>
+				</Column>
+			</columns>
+		</Table>
+		<Button type="Reject" text="Close" press="OnClose"></Button>
+	</Dialog>
+</core:FragmentDefinition>

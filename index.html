@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>SAP HANA</title>
+<link type="image/x-icon" href="/sap/hana/ide/common/images/favicon.ico"
+	rel="shortcut icon" />
+<link type="image/x-icon" href="/sap/hana/ide/common/images/favicon.ico"
+	rel="icon" />
+<!-- Load SAPUI5 (from a remote server), select gold reflection theme and commons+ux3 control libraries -->
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="/sap/ui5/1/resources/sap-ui-core.js"
+	data-sap-ui-libs="sap.ui.commons,sap.ui.table,sap.ui.ux3,sap.ui.demokit"
+	data-sap-ui-theme="sap_goldreflection">
+	
+</script>
+
+<style type="text/css">
+html, body {
+	overflow: hidden;
+}
+ 
+#myShell-content {
+	overflow: hidden;
+	background-color: white;
+}
+
+;
+.naviIcons {
+	float: left;
+}
+
+.naviButton {
+	height: 80px;
+	background-color: #007cc0;
+	font-family: Calibri;
+	color: white;
+	margin-left: 8px;
+	margin-bottom: 35px;
+	float: left;
+	position: relative;
+}
+
+#navigationBar {
+	position: absolute;
+}
+</style>
+
+<script type="text/javascript"
+	src="/sap/hana/ide/common/lib/jquery/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+
+<script>
+	function logout() {
+		requestWithXCSRF({
+			url : "/sap/hana/ide/common/remote/server/logout.xscfunc",
+			type : "POST",
+			success : function(ret) {
+				document.location.reload(true);
+			}
+		});
+	}
+
+	function requestWithXCSRF(ioRequest) {
+		$.ajax({
+			type : "HEAD",
+			url : "/sap/hana/ide/common/remote/server/csrf.xsjs",
+			headers : {
+				"X-CSRF-Token" : "Fetch"
+			},
+			success : function(data, textStatus, jqXHR) {
+				var securityToken = jqXHR.getResponseHeader("X-CSRF-Token");
+				if (ioRequest['headers']) {
+					ioRequest['headers']['X-CSRF-Token'] = securityToken;
+				} else {
+					ioRequest.headers = {};
+					ioRequest['headers']['X-CSRF-Token'] = securityToken;
+				}
+				$.ajax(ioRequest);
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				//do nothing
+			}
+
+		});
+
+	}
+
+	function addNaviButtonsNew(iaNaviElements) {
+		var liTotalWidth = $('#bannerSpan').width();
+		var liBannerWidth = (liTotalWidth - 60) / 2 - 81;
+		for (var i = 0; i < iaNaviElements.length; i++) {
+			if (i % 2 !== 0) {
+				$("<div style='width:50px;height:80px;float:left'></div>")
+						.appendTo($('#navigationBar'));
+			}
+			$(
+					"<a target='_blank' style='text-decoration:none;float:left;width:"+liBannerWidth+"' href="+iaNaviElements[i].URL+"><img src="+iaNaviElements[i].imageSource+" style='border:0px;float:left'><div class='naviButton' id='naviButtonID-"+i+"' style='width:"+liBannerWidth+"px'><span style='font-size:20px;font-weight:bold;float:left;text-align:left;padding:10px;'>"
+							+ iaNaviElements[i].label
+							+ "<p style='font-size:12px;font-weight:normal;margin:8px 0px 5px 0px;'>"
+							+ iaNaviElements[i].description
+							+ "</p></span></div></a>").appendTo(
+					$('#navigationBar'));
+
+		}
+		$('#navigationBar').css({
+			"width" : (liTotalWidth + 5) + "px",
+			"height" : "100px"
+		});
+		$('#navigationBar').offset({
+			left : $('#bannerSpan').offset().left
+		});
+
+	}
+
+	var oShell = new sap.ui.ux3.Shell("myShell", {
+		appIcon : "/sap/hana/ide/common/images/sap.gif", // put the SAP logo into the header
+		appTitle : "SAPUI5 - Finance Weekly Performance Reporting", // give a title
+		showSearchTool : false,
+		showFeederTool : false,
+		showTools : false,
+		designType : sap.ui.ux3.ShellDesignType.Crystal,
+		//designType: sap.ui.ux3.ShellDesignType.Light,
+		showPane : false,
+		panWidth : 5,
+		fullHeightContent : true,
+		applyContentPadding : false
+	});
+
+	// place the Shell into the <div> element defined below    
+	oShell.placeAt("shellArea");
+	$
+			.ajax({
+				url : "/sap/hana/ide/common/plugin/init/server/serviceAPI.xsjs?action=getSystemInfo",
+				type : "GET",
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					return false;
+				},
+				success : function(data, s, xhr) {
+					if (xhr.getResponseHeader("x-sap-login-page")) {
+						return;
+					}
+
+					if (data) {
+						if (data.sid && data.sid !== '') {
+							/*******************************VERSION INFO HERE**************************************/
+							oShell.insertHeaderItem(
+									new sap.ui.commons.TextView({
+										text : "v " + data.ideversion,
+										tooltip : 'Version'
+									}), 1);
+
+							/**__________________________________________________________________________________**/
+							oShell.insertHeaderItem(
+									new sap.ui.commons.TextView({
+										text : data.user,
+										tooltip : 'User'
+									}), 2);
+							oShell.insertHeaderItem(
+									new sap.ui.commons.TextView({
+										text : data.dbname,
+										tooltip : 'Database Name'
+									}), 2);
+							var lsSystemInformation = "SID:\t\t" + data.sid
+									+ "\n";
+							lsSystemInformation += "Database Name:\t"
+									+ data.dbname + "\n";
+							lsSystemInformation += "Host:\t\t" + data.host
+									+ "\n";
+							lsSystemInformation += "Instance Number:\t"
+									+ data.instancenumber + "\n";
+							lsSystemInformation += "HANA Version:\t"
+									+ data.version;
+							oShell.insertHeaderItem(
+									new sap.ui.commons.TextView({
+										text : data.sid + " (" + data.host
+												+ " " + data.instancenumber
+												+ ")",
+										tooltip : lsSystemInformation
+									}), 3);
+
+							$(document)
+									.attr(
+											'title',
+											'['
+													+ data.sid
+													+ '] '
+													+ 'SAPUI5 - Finance Weekly Performance Reporting');
+							oShell
+									.setAppTitle('C18101 - Finance Weekly Performance Reporting');
+						}
+					}
+					$('.sapUiUx3ShellHeaderSep').css({
+						"background-color" : "#999999"
+					});
+				}
+			});
+
+	var loHTML1 = new sap.ui.core.HTML(
+			"html1",
+			{
+				// the static content as a long string literal
+				content : '<div id="mainContainer" style="display:none;text-align:center;top:200px;position:relative">'
+						+ '    <div id="banner" style="margin-bottom:60px">'
+						+ '        <span id="bannerSpan" style="text-align:center;margin-top:80px;font-size:30pt;color:grey;font-weight:bold;font-family:Calibri">'
+						+ 'Weekly Finance Reporting - Control Tables Maintenance'
+						+ '        </span>'
+						+ '	</div>'
+						+ '	<div id="navigationBar" style="display:inline">'
+						+ '    </div>    ' + '</div>',
+				preferDOM : false,
+				// use the afterRendering event for 2 purposes
+				afterRendering : function(e) {
+					$(window).resize(function() {
+						$('#navigationBar').offset({
+							left : $('#bannerSpan').offset().left
+						});
+						return false;
+					});
+					$(document).ready(function() {
+						$('#navigationBar').offset({
+							left : $('#bannerSpan').offset().left
+						});
+						return false;
+					});
+					$('#navigationBar').css("width",
+							$('#bannerSpan').width() + "px");
+					$('#mainContainer').show();
+					addNaviButtonsNew([
+							{
+								"label" : "Weather Impact",
+								"imageSource" : "/sap/hana/ide/common/images/editor_g.png",
+								"URL" : "/ZRT_CONTROL_TABLES/CONTROL_Weather_Impact/index.html",
+								"description" : "Create, Read, Update and Delete"
+							},
+							{
+								"label" : "Government Cheques",
+								"imageSource" : "/sap/hana/ide/common/images/editor_g.png",
+								"URL" : "/ZRT_CONTROL_TABLES/CONTROL_Gov_Cheque/index.html",
+								"description" : "Create, Read, Update and Delete"
+							},
+ 							{
+ 								"label" : "Holidays",
+ 								"imageSource" : "/sap/hana/ide/common/images/security_g.png",
+ 								"URL" : "/ZRT_CONTROL_TABLES/CONTROL_Holiday/index.html",
+ 								"description" : "Create, Read, Update and Delete"
+ 							},
+							{
+								"label" : "POS Departments Exclusion",
+								"imageSource" : "/sap/hana/ide/common/images/security_g.png",
+								"URL" : "/ZRT_CONTROL_TABLES/CONTROL_POS_EXCL/index.html",
+								"description" : "Update"
+							},
+							{
+								"label" : "Site Exclusion",
+								"imageSource" : "/sap/hana/ide/common/images/catalog_g.png",
+								"URL" : "/ZRT_CONTROL_TABLES/CONTROL_SITE_EXCL/index.html",
+								"description" : "Create, Read, Update and Delete"
+							},
+							{
+								"label" : "Region, Site and POS Department Exception",
+								"imageSource" : "/sap/hana/ide/common/images/catalog_g.png",
+								"URL" : "/ZRT_CONTROL_TABLES/CONTROL_SITE_POS_EXCEPTION/index.html",
+								"description" : "Create, Read, Update and Delete"
+							},
+							{
+								"label" : "Site Split Management",
+								"imageSource" : "/sap/hana/ide/common/images/catalog_g.png",
+								"URL" : "/ZRT_CONTROL_TABLES/CONTROL_Site_Split/index.html",
+								"description" : "Create, Read, Update and Delete"
+							}							
+
+							
+							
+							]);
+				}
+			});
+	oShell.setContent(loHTML1);
+	oShell.attachLogout(null, function() {
+		logout();
+	}, null);
+</script>
+<script type="text/javascript">
+	
+</script>
+</head>
+
+<body class="sapUiBody">
+	<!-- This is where the Shell will live -->
+	<div id="shellArea"></div>
+</body>
+</html>
+

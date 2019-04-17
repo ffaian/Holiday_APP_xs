@@ -1,0 +1,6 @@
+service {
+
+"ZRT_CONTROL_TABLES.SAP_HANA_Development::CV_BW_REGION_MD" as "od_Sobeys_Region"
+	keys("ZZREGION");
+	
+}

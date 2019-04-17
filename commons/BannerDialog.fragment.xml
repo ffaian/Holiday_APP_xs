@@ -1,0 +1,17 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<SelectDialog
+		id = "myBannerDialog"
+		title="Banner"
+		class="sapUiPopupWithPadding"
+		items="{/Pos_depts}"
+		search="OnHandleValueHelpSearch"
+		liveChange="OnHandleLiveValueHelpSearch"
+		confirm="OnHandleValueHelpClose"
+		cancel="OnHandleValueHelpClose">
+		<StandardListItem
+			title="{BANNER}"
+			description="{BANNER_TXT}" />
+	</SelectDialog>
+</core:FragmentDefinition>

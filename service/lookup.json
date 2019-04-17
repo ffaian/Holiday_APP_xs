@@ -1,0 +1,79 @@
+{
+   
+   	"chequetype": [
+		{
+			"Value": "Government Cheque Release"
+		},
+		{
+			"Value": "HST Rebate"
+		},
+		{
+			"Value": "Child Tax Benefit"
+		}
+	],
+	"holidays": [
+		{
+			"Value": "New Year's Day"
+		},
+		{
+			"Value": "Good Friday"
+		},
+		{
+			"Value": "Easter Monday"
+		}, 
+		{
+			"Value": "Victoria Day"
+		},		
+		{
+			"Value": "Canada Day"
+		},
+		{
+			"Value": "Civic Holiday"
+		},
+		{
+			"Value": "Labour Day"
+		},
+		{
+			"Value": "Thanksgiving Day"
+		},
+		{
+			"Value": "Remembrance Day"
+		},
+		{
+			"Value": "Christmas Day"
+		},
+		{
+			"Value": "Boxing Day"
+		}
+	],
+	"weather": [
+		{
+			"KEY": "1",
+			"TXT": "Wind Storm"
+		},
+		{
+			"KEY": "2",
+			"TXT": "Snow Storm"
+		},
+		{
+			"KEY": "3",
+			"TXT": "Ice Storm"
+		}, 
+		{
+			"KEY": "4",
+			"TXT": "Fire"
+		},		
+		{
+			"KEY": "5",
+			"TXT": "Heavy Rain / Flooding"
+		},
+		{
+			"KEY": "6",
+			"TXT": "Hurricane / Tropical Storm"
+		},
+		{
+			"KEY": "7",
+			"TXT": "Other Weather Impact"
+		}
+	]
+}

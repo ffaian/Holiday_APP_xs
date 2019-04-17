@@ -1,0 +1,17 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<SelectDialog
+		id = "myPOS_DeptDialog"
+		title="POS Departments"
+		class="sapUiPopupWithPadding"
+		items="{/Pos_depts}"
+		search="OnHandleValueHelpSearch"
+		liveChange="OnHandleLiveValueHelpSearch"
+		confirm="OnHandleValueHelpClose"
+		cancel="OnHandleValueHelpClose">
+		<StandardListItem
+			title="{POS_DEPT}"
+			description="{POS_TXT}" />
+	</SelectDialog>
+</core:FragmentDefinition>
